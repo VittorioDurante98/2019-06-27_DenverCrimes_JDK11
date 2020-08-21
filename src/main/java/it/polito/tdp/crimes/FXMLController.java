@@ -23,10 +23,10 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ComboBox<?> boxCategoria;
+    private ComboBox<String> boxCategoria;
 
     @FXML
-    private ComboBox<?> boxAnno;
+    private ComboBox<Integer> boxAnno;
 
     @FXML
     private Button btnAnalisi;
@@ -47,7 +47,17 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	txtResult.clear();
+    	if(boxCategoria.getValue()==null) {
+    		txtResult.appendText("Aggiungi categoria!");
+    		return;
+    	}
+    	if(boxAnno.getValue()==null) {
+    		txtResult.appendText("Aggiungi anno!");
+    		return;
+    	}
+    	
+    	model.creaGrafo(boxAnno.getValue(), boxCategoria.getValue());
     }
 
     @FXML
@@ -63,5 +73,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		this.boxCategoria.getItems().addAll(model.getReati());
+		this.boxAnno.getItems().addAll(model.getAnni());
 	}
 }

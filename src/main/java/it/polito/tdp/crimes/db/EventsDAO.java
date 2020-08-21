@@ -55,4 +55,94 @@ public class EventsDAO {
 		}
 	}
 
+	public List<String> listaReati(){
+		String sql = "SELECT Distinct(e.offense_category_id) FROM `EVENTS` AS e ORDER BY e.offense_category_id ASC " ;
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			List<String> list = new ArrayList<>() ;
+			
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				try {
+					list.add(res.getString("offense_category_id")); 
+					
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+			
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
+	
+	public List<Integer> listAnni(){
+		String sql = "SELECT DISTINCT(YEAR (e.reported_date)) as anno FROM `EVENTS` AS e ORDER BY e.reported_date ASC " ;
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			List<Integer> list = new ArrayList<>() ;
+			
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				try {
+					list.add(res.getInt("anno"));
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+			
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
+	
+	public List<String> listaVertici(int anno, String categoria){
+		String sql = "SELECT DISTINCT(e.offense_type_id) as tipo FROM `events` e " + 
+				"WHERE e.offense_category_id=? AND YEAR(e.reported_date)=? " + 
+				"ORDER BY e.offense_type_id ASC " ;
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			List<String> list = new ArrayList<>() ;
+			st.setString(1, categoria);
+			st.setInt(2, anno);
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				try {
+					list.add(res.getString("tipo"));
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+			
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+	}
 }
